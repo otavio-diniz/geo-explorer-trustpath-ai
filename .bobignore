@@ -1,0 +1,32 @@
+# === SEGREDOS E CREDENCIAIS — NUNCA LER ===
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+*.token
+secrets/
+credentials/
+config/local.*
+
+# === DADOS BRUTOS / GERADOS FORA DO CONTEXTO NECESSÁRIO ===
+data/raw/
+data/processed/
+data/exports/
+
+# === ARTEFATOS GERADOS / TEMPORÁRIOS ===
+dist/
+build/
+coverage/
+.cache/
+tmp/
+evidence/tmp/
+
+# === MCP / SESSÕES / CACHE ===
+.mcp_cache/
+*.mcp_session
+
+# === NODE.JS ===
+
+node_modules/
