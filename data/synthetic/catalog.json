@@ -116,7 +116,201 @@
         "HU-02",
         "HU-03"
       ],
-      "final_challenge_id": null
+      "final_challenge_id": "CH-TRK-AI-SAFE-DOCS-01-L2-01",
+      "challenges": [
+        {
+          "challenge_id": "CH-TRK-AI-SAFE-DOCS-01-L2-01",
+          "synthetic": true,
+          "track_id": "TRK-AI-SAFE-DOCS-01",
+          "level": "L2",
+          "role_ids": ["finance_admin_sme"],
+          "scenario_category": "trustpath_decision_gate",
+          "risk_context": "sensitive_data",
+          "title": "TrustPath Decision Gate — Revisão Segura de Proposta Assistida por IA",
+          "scenario": "Marina, coordenadora financeiro-administrativa fictícia de uma PME de serviços (NexaServ — FICTÍCIO/SINTÉTICO), precisa revisar um rascunho de proposta comercial produzido com apoio de IA antes de qualquer uso externo. O rascunho contém afirmações sobre o cliente Aurora (CL-AURORA-001 — FICTÍCIO/SINTÉTICO) que precisam ser verificadas contra fontes explícitas. Algumas afirmações possuem fonte rastreável; outras contêm lacunas de proveniência — incluindo uma lacuna pedagógica intencional. A atividade deve conduzir o participante a implementar um portão de decisão auditável que distingue evidência verificável, lacunas, riscos e decisões que exigem supervisão humana. A atividade NÃO deve autorizar nem executar decisão empresarial final.",
+          "task": "Implemente a função decisionGate(caseInput) que: (1) selecione somente os dados necessários ao objetivo (minimização); (2) verifique cada afirmação material do rascunho contra fontes explícitas do dossiê sintético; (3) classifique cada afirmação como SUPPORTED, NEEDS_REVIEW ou UNSUPPORTED; (4) identifique riscos e controles aplicáveis; (5) acione Human Gate quando as condições exigirem; (6) produza uma decisão auditável sem executar qualquer ação externa. A função deve retornar um objeto com: status (PASS|BLOCKED_SAFE|FAIL), claim_evaluations (array de {claim_id, status, source_ids, rationale}), risk_items (array de {risk_id, control, human_gate_required}), human_gate ({required, reason_codes}), human_decision ({required, allowed_actions: ['REQUEST_MORE_EVIDENCE','APPROVE_WITH_CHANGES','REJECT','STOP_EXTERNAL_ACTION'], selected_action}), justification e limitations. IMPORTANTE: selected_action deve ser preenchido pela autoridade humana após revisão — não pela IA.",
+          "constraints": [
+            "Usar somente os source_ids disponíveis no dossiê sintético canônico.",
+            "Não inventar fontes, fatos ou valores não presentes nos dados sintéticos.",
+            "Toda afirmação material deve ter avaliação explícita em claim_evaluations.",
+            "Evidência insuficiente não pode ser convertida em fato — use NEEDS_REVIEW ou UNSUPPORTED.",
+            "Aprovação não pode ser inferida de AI_PROPOSED ou TESTED; exige autoridade humana.",
+            "Resultado deve ser determinístico para o mesmo caseInput.",
+            "Nenhuma ação externa pode ser executada (sem envio de e-mail, sem chamada de API).",
+            "Dado sensível ou confidencial exige revisão e minimização.",
+            "Desconto acima de 5% exige Human Gate conforme DOC-002.",
+            "Envio externo exige Human Gate conforme DOC-002.",
+            "Usar somente domínio example.invalid para endereços de e-mail sintéticos.",
+            "synthetic=true em todos os componentes do dossiê."
+          ],
+          "synthetic_inputs": {
+            "synthetic": true,
+            "description": "Dossiê sintético canônico para o desafio CH-TRK-AI-SAFE-DOCS-01-L2-01 — FICTÍCIO/SINTÉTICO",
+            "sources": [
+              {
+                "source_id": "DOC-001",
+                "synthetic": true,
+                "title": "Solicitação Comercial — Cliente Aurora — FICTÍCIO/SINTÉTICO",
+                "facts": {
+                  "client_id": "CL-AURORA-001",
+                  "requested_service": "piloto de automação para consolidação de relatórios administrativos e financeiros",
+                  "requested_scope": "3 fluxos",
+                  "desired_start": "até 30 dias após aprovação",
+                  "approved_budget": null,
+                  "external_send_authorization": null
+                }
+              },
+              {
+                "source_id": "DOC-002",
+                "synthetic": true,
+                "title": "Política Interna de Propostas — NexaServ — FICTÍCIO/SINTÉTICO",
+                "rules": [
+                  "Afirmações materiais devem ser rastreáveis a uma fonte explícita.",
+                  "Desconto acima de 5% exige aprovação humana de gestor.",
+                  "Envio externo exige revisão e aprovação humana.",
+                  "Fornecer à IA somente dados necessários ao objetivo.",
+                  "Ausência de evidência deve gerar solicitação de evidência/limitação, nunca inferência silenciosa."
+                ]
+              },
+              {
+                "source_id": "DATA-001",
+                "synthetic": true,
+                "description": "Pequena base JSON sintética de clientes — FICTÍCIO/SINTÉTICO",
+                "records": [
+                  {
+                    "client_id": "CL-AURORA-001",
+                    "synthetic": true,
+                    "service_fit_score": 0.86,
+                    "estimated_internal_cost": 42000,
+                    "estimated_proposal_value": 78000,
+                    "approved_budget": null,
+                    "historical_discount_pct": 3,
+                    "contact_email": "aurora.contact@example.invalid",
+                    "internal_account_code": "SYN-ACCT-001"
+                  },
+                  {
+                    "client_id": "CL-BOREAL-002",
+                    "synthetic": true,
+                    "service_fit_score": 0.71,
+                    "estimated_internal_cost": 35000,
+                    "estimated_proposal_value": 59000,
+                    "approved_budget": 60000,
+                    "historical_discount_pct": 4,
+                    "contact_email": "boreal.contact@example.invalid",
+                    "internal_account_code": "SYN-ACCT-002"
+                  },
+                  {
+                    "client_id": "CL-CEDRO-003",
+                    "synthetic": true,
+                    "service_fit_score": 0.64,
+                    "estimated_internal_cost": 31000,
+                    "estimated_proposal_value": 52000,
+                    "approved_budget": 45000,
+                    "historical_discount_pct": 2,
+                    "contact_email": "cedro.contact@example.invalid",
+                    "internal_account_code": "SYN-ACCT-003"
+                  }
+                ]
+              },
+              {
+                "source_id": "AI-DRAFT-001",
+                "synthetic": true,
+                "type": "rascunho sintético produzido por IA",
+                "claims": [
+                  {
+                    "claim_id": "CLAIM-001",
+                    "synthetic": true,
+                    "text": "Aurora solicitou piloto para 3 fluxos com início até 30 dias após aprovação.",
+                    "source_ids": ["DOC-001"],
+                    "intentional_provenance_gap": false
+                  },
+                  {
+                    "claim_id": "CLAIM-002",
+                    "synthetic": true,
+                    "text": "Aurora possui orçamento aprovado de R$ 85.000.",
+                    "source_ids": [],
+                    "intentional_provenance_gap": true
+                  },
+                  {
+                    "claim_id": "CLAIM-003",
+                    "synthetic": true,
+                    "text": "Pode-se oferecer desconto de 12% sem aprovação adicional.",
+                    "source_ids": ["DOC-002"],
+                    "intentional_provenance_gap": false
+                  },
+                  {
+                    "claim_id": "CLAIM-004",
+                    "synthetic": true,
+                    "text": "A proposta pode ser enviada automaticamente ao cliente após a revisão da IA.",
+                    "source_ids": ["DOC-002"],
+                    "intentional_provenance_gap": false
+                  }
+                ]
+              }
+            ]
+          },
+          "expected_evidence": [
+            "Mapa AFIRMAÇÃO → FONTE → STATUS_DE_VERIFICAÇÃO cobrindo todos os claims do dossiê.",
+            "Mapa RISCO → CONTROLE → HUMAN_GATE para cada risco identificado.",
+            "Decisão humana simulada explicitamente separada da sugestão da IA (selected_action preenchido por autoridade humana).",
+            "Justificativa final documentada.",
+            "Limitações explícitas declaradas.",
+            "Testes automatizados da solução do participante demonstrando os casos de erro e sucesso."
+          ],
+          "quality_criteria": [
+            "Nenhuma fonte pode ser inventada — toda source_id deve existir no dossiê sintético.",
+            "Toda afirmação material deve ter avaliação explícita em claim_evaluations.",
+            "Evidência insuficiente não pode ser convertida em fato — ausência de fonte deve resultar em NEEDS_REVIEW ou UNSUPPORTED, nunca em aprovação silenciosa.",
+            "Aprovação não pode ser inferida de AI_PROPOSED ou TESTED; exige autoridade humana explícita.",
+            "Resultado deve ser determinístico para o mesmo caseInput.",
+            "A solução deve distinguir evidência verificável, inferência e decisão humana.",
+            "Lacuna material (ex.: approved_budget=null sem fonte que confirme valor) deve resultar em BLOCKED_SAFE, não em aprovação.",
+            "Reason codes esperados: PROVENANCE_GAP, INSUFFICIENT_EVIDENCE, HUMAN_APPROVAL_REQUIRED, UNSUPPORTED_ACTION."
+          ],
+          "security_criteria": [
+            "synthetic=true obrigatório em todos os componentes do dossiê utilizados.",
+            "Minimizar campos e registros: usar somente os dados necessários ao objetivo (CL-AURORA-001 é o alvo; Boreal/Cedro existem para demonstrar minimização).",
+            "Não usar segredo, credencial ou dado real em nenhum ponto da solução.",
+            "Não acessar rede, API ou sistema externo.",
+            "Não executar envio externo de nenhum tipo.",
+            "Desconto acima de 5% exige Human Gate (conforme DOC-002).",
+            "Envio externo exige Human Gate (conforme DOC-002).",
+            "Dado sensível ou confidencial exige revisão humana e minimização explícita."
+          ],
+          "human_gate_condition": [
+            {
+              "condition": "material_claim_without_sufficient_evidence",
+              "trigger": "Afirmação material sem fonte suficiente (ex.: CLAIM-002 com source_ids vazio e intentional_provenance_gap=true).",
+              "required_actions": ["HUMAN_APPROVAL_REQUIRED", "REQUEST_MORE_EVIDENCE"]
+            },
+            {
+              "condition": "discount_above_5_percent",
+              "trigger": "Desconto proposto acima de 5% (ex.: CLAIM-003 propõe 12% sem aprovação).",
+              "required_actions": ["HUMAN_APPROVAL_REQUIRED"]
+            },
+            {
+              "condition": "external_send",
+              "trigger": "Qualquer tentativa de envio externo automático (ex.: CLAIM-004 propõe envio automático).",
+              "required_actions": ["HUMAN_APPROVAL_REQUIRED", "STOP_EXTERNAL_ACTION"]
+            },
+            {
+              "condition": "real_sensitive_data_or_secret",
+              "trigger": "Presença de dado real, segredo ou credencial no caseInput.",
+              "required_actions": ["SYNTHETIC_DATA_REQUIRED", "STOP_EXTERNAL_ACTION"]
+            }
+          ],
+          "hints_progressive": [
+            "Hint 1: Crie um índice explícito de source_id a partir do dossiê e nunca valide afirmações por similaridade textual — use somente correspondência exata de IDs.",
+            "Hint 2: Separe a etapa de validação de evidência (claim_evaluations) da etapa de avaliação de risco e Human Gate (risk_items, human_gate) — são responsabilidades distintas.",
+            "Hint 3: Quando uma afirmação material não tiver evidência suficiente ou houver ação externa proposta, prefira BLOCKED_SAFE à inferência ou aprovação automática."
+          ],
+          "post_challenge_reflection": [
+            "1. Qual evidência tornou sua decisão auditável? Cite os source_ids e claim_ids que sustentaram ou bloquearam cada afirmação material.",
+            "2. Quais dados foram excluídos por minimização e por quê? Identifique campos e registros do dossiê que não eram necessários ao objetivo e descreva o critério de exclusão.",
+            "3. Em quais pontos a autoridade humana deve interromper ou aprovar o fluxo? Liste as condições de Human Gate identificadas e justifique por que a IA não pode decidir autonomamente nesses pontos."
+          ]
+        }
+      ]
     }
   ],
   "personas": [
