@@ -1,55 +1,71 @@
 # Geo-Explorer — TrustPath AI
 
+> **Do interesse em IA à capacidade de utilizá-la com dados, segurança e supervisão humana.**
 
-> Do interesse em IA à capacidade de utilizá-la com dados, segurança e supervisão humana.
+Projeto desenvolvido no contexto do **Desafio de Projeto Geo-Explorer — DIO / IBM Bob**.
 
+> **Autoria e direitos:** © 2026 Otávio Diniz. Todos os direitos reservados sobre os materiais autorais específicos deste projeto, observados os direitos de terceiros. Este repositório é público para avaliação acadêmica, demonstração técnica e portfólio. A publicação pública **não constitui licença open source**. Consulte [`LICENSE`](LICENSE) e [`NOTICE.md`](NOTICE.md).
+
+## Estado do projeto
+
+- **Core MVP:** concluído e validado.
+- **Fluxo funcional:** `/trilha → /desafio → evidências sintéticas → /certificado`.
+- **MCP read-only:** concluído e validado por `stdio`.
+- **Testes independentes:** **108/108 PASS** — 93 Core + 15 MCP.
+- **Catálogo sintético:** imutabilidade validada.
+- **GitHub:** superfície pública de portfólio e demonstração técnica.
+- **Submissão à DIO:** ação humana separada; não é inferida pelo estado técnico do repositório.
+
+O projeto está tecnicamente concluído como **protótipo educacional e case de portfólio**, sem alegação de produto comercial, prontidão para produção ou aprovação institucional pela DIO/IBM.
 
 ## Resumo
 
-
 O Geo-Explorer — TrustPath AI é um protótipo educacional que transforma perfil, objetivo de uso de IA e contexto de risco em uma jornada estruturada de aprendizagem. O fluxo central conecta uma trilha determinística, um desafio prático baseado em evidências sintéticas e um certificado exclusivamente fictício/demonstrativo.
-
 
 O projeto segue uma abordagem **AI-assisted, human-owned e security-by-design**: agentes de IA apoiam planejamento, implementação e testes, enquanto decisões materiais, revisão e publicação permanecem sob supervisão humana.
 
-
 ## Problema
-
 
 Profissionais e pequenas organizações podem adotar IA mais rapidamente do que desenvolvem competências em dados, segurança, proveniência, pensamento crítico e supervisão humana. O TrustPath AI explora quais competências uma pessoa precisa praticar e demonstrar antes de ampliar o uso de IA em um contexto de trabalho.
 
-
-## Fluxo principal
-
+## Solução e fluxo principal
 
 `PERFIL/OBJETIVO → /trilha → /desafio → EVIDÊNCIAS SINTÉTICAS → /certificado`
-
 
 - **`/trilha`** — recomenda uma sequência determinística de competências a partir de perfil, objetivo, nível e contexto de risco.
 - **`/desafio`** — entrega o TrustPath Decision Gate, um desafio sintético centrado em evidência, proveniência, minimização de dados e Human-in-the-Loop. A solução permanece responsabilidade do participante.
 - **`/certificado`** — gera exclusivamente um certificado fictício/demonstrativo após o atendimento dos critérios didáticos e associação das evidências sintéticas exigidas.
 
+### Exemplo de jornada
+
+```text
+perfil + objetivo + risco
+        ↓
+      /trilha
+        ↓
+     /desafio
+        ↓
+evidências sintéticas
+        ↓
+   /certificado
+```
+
+O exemplo descreve o fluxo do protótipo; não representa emissão institucional de certificado.
 
 ## MCP read-only
 
-
 O projeto inclui um servidor MCP local por `stdio`, com acesso exclusivamente de leitura a projeções mínimas do catálogo sintético.
 
-
 Tools registradas:
-
 
 - `list_tracks`
 - `get_track`
 - `list_skills`
 - `get_challenge`
 
-
 O servidor usa um caminho interno fixo para o catálogo, não aceita paths ou URLs arbitrários e não executa rede, shell, Git ou escrita de filesystem durante o runtime.
 
-
 ## Arquitetura
-
 
 ```text
 Perfil + objetivo + contexto de risco
@@ -66,16 +82,13 @@ Perfil + objetivo + contexto de risco
                 ▼
           /certificado
 
-
        catálogo sintético
           ▲         ▲
           │         │
       comandos   MCP read-only
 ```
 
-
 ## Stack
-
 
 - Node.js 24+
 - JavaScript ESM
@@ -85,21 +98,28 @@ Perfil + objetivo + contexto de risco
 - `@modelcontextprotocol/server` 2.2.0
 - `zod` 4.6.5
 
+## Instalação e execução
 
-## Instalação e testes
-
+Pré-requisito: Node.js 24+.
 
 ```bash
 npm ci
 npm test
 ```
 
+Para iniciar o servidor MCP:
+
+```bash
+node mcp/server.js
+```
+
+O processo usa `stdio` como transporte MCP. Um host MCP deve iniciar esse comando e tratar `stdout` exclusivamente como canal do protocolo.
+
+## Validação e evidências
 
 Validação independente reproduziu **108/108 testes aprovados**, sendo **93 testes do Core** e **15 testes MCP**, com zero falhas.
 
-
 A suíte cobre, entre outros pontos:
-
 
 - fluxos válidos e entradas inválidas;
 - determinismo e integração entre IDs do Core;
@@ -110,35 +130,20 @@ A suíte cobre, entre outros pontos:
 - sessão MCP real por `stdio` com `initialize`, `tools/list` e `tools/call`;
 - rejeição nativa de tool inexistente pelo protocolo MCP.
 
-
-## Executando o servidor MCP
-
-
-```bash
-node mcp/server.js
-```
-
-
-O processo usa `stdio` como transporte MCP. A integração com um host MCP deve iniciar esse comando e tratar `stdout` exclusivamente como canal do protocolo.
-
+> O número de testes representa a suíte validada neste estado do repositório; não é métrica de eficácia educacional, adoção ou qualidade de mercado.
 
 ## Estrutura principal
-
 
 ```text
 commands/              comandos do Core
 data/synthetic/        catálogo e dados fictícios
 mcp/                   servidor MCP read-only
 tests/                 testes automatizados
-docs/                  documentação complementar quando aplicável
 ```
 
-
-Arquivos de governança operacional e evidências internas não pertencem à superfície pública do projeto.
-
+Arquivos de governança operacional, prompts internos, logs de agentes e evidências administrativas não pertencem à superfície pública do projeto.
 
 ## Segurança, privacidade e integridade
-
 
 - O MVP utiliza dados fictícios/sintéticos.
 - Credenciais e dados reais não são necessários para o fluxo demonstrativo.
@@ -147,41 +152,34 @@ Arquivos de governança operacional e evidências internas não pertencem à sup
 - O desafio enfatiza minimização de dados, proveniência e Human-in-the-Loop.
 - O MCP é read-only, sem rede, shell ou escrita de filesystem no runtime.
 - O certificado do protótipo é fictício/demonstrativo e não possui validade institucional ou profissional.
-
+- Vulnerabilidades e incidentes devem seguir [`SECURITY.md`](SECURITY.md).
 
 ## Desenvolvimento assistido por IA
 
-
 O IBM Bob foi utilizado como agente de apoio em planejamento, implementação controlada, testes e operações de versionamento. O processo reforçou três práticas: tarefas estreitas e verificáveis, revisão independente do contrato mesmo após suítes verdes e interrupção segura quando o ambiente técnico não sustentava a próxima ação.
 
-
-O projeto preserva a distinção entre proposta do agente, decisão humana, teste e resultado observado.
-
+O projeto preserva a distinção entre proposta do agente, decisão humana, teste e resultado observado. Logs operacionais, prompts, reprompts e métricas internas de execução permanecem fora da superfície pública.
 
 ## Aprendizados
 
-
 Uma suíte verde demonstra que a implementação passa nos testes existentes; ela não prova, isoladamente, que os testes representam todo o contrato. Durante o projeto, a revisão independente encontrou divergências semânticas mesmo após execuções verdes e direcionou correções específicas.
-
 
 Outro aprendizado foi separar falha de aplicação de falha do ambiente: dependências e Core foram reproduzidos em substrato local confiável antes de prosseguir com a implementação MCP.
 
+Também se confirmou que **bloquear com segurança** pode ser o comportamento correto de um agente quando autorização, contexto ou substrato técnico não sustentam a continuação.
 
 ## Limitações
-
 
 - Protótipo educacional; não é produto comercial ou solução pronta para produção.
 - Não comprova eficácia educacional, product-market fit ou conformidade regulatória.
 - Dados e certificados são fictícios/demonstrativos.
 - O MCP foi validado como servidor local `stdio`; integrações com hosts específicos dependem da configuração de cada host.
 - Métricas de valor e adoção permanecem hipóteses quando não há baseline observável.
-
+- A publicação deste repositório não implica endosso, aprovação ou vínculo profissional com DIO, IBM ou terceiros citados.
 
 ## Roadmap opcional
 
-
 Itens deliberadamente fora do caminho crítico desta entrega:
-
 
 - `/diagnostico`
 - `/risco`
@@ -190,8 +188,45 @@ Itens deliberadamente fora do caminho crítico desta entrega:
 - analytics
 - interface de usuário
 
+Roadmap representa possibilidades futuras, não funcionalidades implementadas.
+
+## Autoria, licença e uso público
+
+O Geo-Explorer — TrustPath AI é um projeto autoral de **Otávio Diniz**. O repositório permanece público para avaliação acadêmica, inspeção técnica, demonstração e portfólio, mas **não adota licença open source**.
+
+A licença proprietária permite a avaliadores, instrutores, recrutadores e revisores inspecionar, clonar/baixar e executar o projeto na medida necessária para avaliação ou reprodução da demonstração documentada. Outros usos dependem dos termos completos.
+
+- Termos de uso: [`LICENSE`](LICENSE)
+- Autoria, finalidade pública e terceiros: [`NOTICE.md`](NOTICE.md)
+- Política de segurança: [`SECURITY.md`](SECURITY.md)
+- Orientações de contribuição: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+
+A disponibilidade pública continua sujeita às funcionalidades e aos Termos de Serviço do GitHub.
+
+## Componentes e direitos de terceiros
+
+As dependências e tecnologias de terceiros permanecem sob suas próprias licenças e termos.
+
+Entre as dependências diretas deste estado do projeto:
+
+- `@modelcontextprotocol/server` 2.2.0 — Apache-2.0;
+- `zod` 4.6.5 — MIT.
+
+Model Context Protocol, Node.js, DIO, IBM e demais nomes/marcas citados pertencem aos respectivos titulares quando aplicável. Consulte [`NOTICE.md`](NOTICE.md) para o enquadramento de proveniência e direitos.
+
+## Contribuição e feedback
+
+Feedback técnico e de produto é bem-vindo. Como este é um projeto acadêmico autoral e publicado sob licença proprietária, contribuições de código não são presumidamente aceitas. Consulte [`CONTRIBUTING.md`](CONTRIBUTING.md) antes de abrir uma Pull Request.
+
+Não publique segredos, credenciais, dados pessoais ou detalhes exploráveis de vulnerabilidades em issues públicas; consulte [`SECURITY.md`](SECURITY.md).
 
 ## Contexto acadêmico
 
-
 Projeto desenvolvido no contexto do Desafio de Projeto Geo-Explorer do bootcamp DIO / IBM Bob, adaptando o exercício base para um caso de capacitação responsável em IA com dados sintéticos, testes automatizados, documentação, GitHub e integração MCP.
+
+A menção à DIO e à IBM registra a origem acadêmica e tecnológica do desafio e **não implica endosso, aprovação, certificação ou vínculo profissional** dessas organizações sobre esta implementação autoral.
+
+---
+
+**Geo-Explorer — TrustPath AI**  
+© 2026 Otávio Diniz. Todos os direitos reservados.
