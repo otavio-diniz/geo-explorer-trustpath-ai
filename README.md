@@ -52,6 +52,69 @@ evidências sintéticas
 
 O exemplo descreve o fluxo do protótipo; não representa emissão institucional de certificado.
 
+## Como usar os comandos
+
+Os nomes `/trilha`, `/desafio` e `/certificado` representam o fluxo funcional do projeto. Na implementação atual, eles são funções JavaScript ESM exportadas pelos arquivos em `commands/`.
+
+### `/trilha`
+
+```js
+import { trilha } from './commands/trilha.js';
+
+const result = trilha({
+  role: 'finance_admin_sme',
+  target_goal: 'safe_ai_document_work',
+  current_level: 'L0',
+  target_level: 'L2',
+  risk_context: 'sensitive_data'
+});
+
+console.log(result);
+```
+
+### `/desafio`
+
+```js
+import { desafio } from './commands/desafio.js';
+
+const result = desafio({
+  track_id: 'TRK-AI-SAFE-DOCS-01',
+  level: 'L2',
+  role_id: 'finance_admin_sme',
+  scenario_category: 'trustpath_decision_gate',
+  risk_context: 'sensitive_data'
+});
+
+console.log(result);
+```
+
+O comando retorna o desafio e o dossiê sintético. Ele **não implementa a solução `decisionGate` pelo participante**.
+
+### `/certificado`
+
+```js
+import { certificado } from './commands/certificado.js';
+
+const result = certificado({
+  participant_alias: 'PARTICIPANTE-DEMO',
+  track_id: 'TRK-AI-SAFE-DOCS-01',
+  completed_challenges: ['CH-TRK-AI-SAFE-DOCS-01-L2-01'],
+  completion_date: '2026-09-30',
+  evidence_ids: [
+    {
+      evidence_id: 'EVID-DEMO-001',
+      track_id: 'TRK-AI-SAFE-DOCS-01',
+      challenge_id: 'CH-TRK-AI-SAFE-DOCS-01-L2-01',
+      synthetic: true
+    }
+  ]
+});
+
+console.log(result);
+```
+
+O resultado é sempre fictício/demonstrativo e contém disclaimer explícito de ausência de validade institucional.
+
 ## MCP read-only
 
 O projeto inclui um servidor MCP local por `stdio`, com acesso exclusivamente de leitura a projeções mínimas do catálogo sintético.
@@ -143,6 +206,20 @@ tests/                 testes automatizados
 
 Arquivos de governança operacional, prompts internos, logs de agentes e evidências administrativas não pertencem à superfície pública do projeto.
 
+## Melhorias realizadas sobre o fluxo-base
+
+A implementação foi deliberadamente além do fluxo mínimo do exercício sem descaracterizar o desafio:
+
+- especialização do Geo-Explorer em **capacitação responsável em IA** para um contexto profissional sintético;
+- trilha determinística com competências de IA, dados, segurança, proveniência, pensamento crítico e Human-in-the-Loop;
+- guarda de competência crítica de segurança em contexto sensível;
+- desafio TrustPath Decision Gate com dossiê sintético, proveniência explícita e Human Gate, sem entregar a solução do participante;
+- certificado fictício com fail-safes contra impersonação institucional;
+- MCP read-only com quatro tools e data minimization;
+- testes adversariais e regressivos sobre inputs malformados, referências ausentes/incompatíveis, imutabilidade e protocolo `stdio`;
+- separação explícita entre conteúdo público de portfólio e governança operacional interna;
+- camada pública de autoria, licença, segurança e contribuição.
+
 ## Segurança, privacidade e integridade
 
 - O MVP utiliza dados fictícios/sintéticos.
@@ -223,6 +300,8 @@ Não publique segredos, credenciais, dados pessoais ou detalhes exploráveis de 
 ## Contexto acadêmico
 
 Projeto desenvolvido no contexto do Desafio de Projeto Geo-Explorer do bootcamp DIO / IBM Bob, adaptando o exercício base para um caso de capacitação responsável em IA com dados sintéticos, testes automatizados, documentação, GitHub e integração MCP.
+
+A fonte oficial disponibilizada para o desafio define o Geo-Explorer, seus três comandos, testes, documentação, publicação em GitHub e a etapa MCP. Ela não fornece, no material autenticado deste projeto, um repositório público de referência ou identificação do expert que possa ser atribuída com segurança; por isso esses dados não são inventados aqui.
 
 A menção à DIO e à IBM registra a origem acadêmica e tecnológica do desafio e **não implica endosso, aprovação, certificação ou vínculo profissional** dessas organizações sobre esta implementação autoral.
 
