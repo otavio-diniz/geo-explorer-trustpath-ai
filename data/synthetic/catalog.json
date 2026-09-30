@@ -1,0 +1,141 @@
+{
+  "synthetic": true,
+  "description": "Catálogo sintético de competências e trilhas — Geo-Explorer / TrustPath AI. Todo conteúdo é fictício e demonstrativo.",
+  "competencies": [
+    {
+      "skill_id": "AI-01",
+      "title": "Literacia de IA Generativa",
+      "domain": "ai",
+      "level": "L2",
+      "prerequisites": [],
+      "critical_security": false,
+      "objective": "Diferenciar resposta plausível de resposta confiável, usando evidência e fonte como critérios para avaliar outputs de IA generativa.",
+      "practice": "Receber um documento sintético e duas respostas de IA sobre ele — uma fiel à fonte e outra contendo extrapolações — e decidir qual pode ser utilizada e sob quais condições.",
+      "evidence_expected": "Parecer curto que identifique a resposta mais confiável, cite os elementos da fonte usados na decisão e registre as limitações ainda existentes."
+    },
+    {
+      "skill_id": "CY-01",
+      "title": "Classificação e Minimização de Dados",
+      "domain": "cyber",
+      "level": "L2",
+      "prerequisites": [],
+      "critical_security": true,
+      "objective": "Aplicar o princípio de minimização, fornecendo à IA somente as informações necessárias para atingir um objetivo específico.",
+      "practice": "Dado um documento sintético completo e o objetivo 'produzir um resumo executivo', selecionar apenas os campos necessários para realizar a tarefa sem expor informações adicionais.",
+      "evidence_expected": "Conjunto mínimo de informações selecionadas, acompanhado de justificativa sobre por que cada item foi incluído e por que os demais foram excluídos."
+    },
+    {
+      "skill_id": "DA-01",
+      "title": "Qualidade de Dados",
+      "domain": "data",
+      "level": "L2",
+      "prerequisites": [],
+      "critical_security": false,
+      "objective": "Determinar se uma base de dados oferece evidência suficiente para responder a uma pergunta de negócio sem transformar ausência ou baixa qualidade de informação em conclusão.",
+      "practice": "Receber uma base sintética incompleta e a pergunta 'quais clientes deveriam receber prioridade em uma proposta?' e avaliar quais conclusões são sustentáveis, quais exigem informação adicional e quais não podem ser feitas.",
+      "evidence_expected": "Registro separado em três grupos: conclusões sustentadas, conclusões condicionais e conclusões não suportadas, com indicação das lacunas existentes."
+    },
+    {
+      "skill_id": "DA-05",
+      "title": "Proveniência de Dados",
+      "domain": "data",
+      "level": "L2",
+      "prerequisites": [],
+      "critical_security": false,
+      "objective": "Manter uma cadeia mínima de evidência que permita explicar de onde vieram as informações utilizadas em um resultado produzido com apoio de IA.",
+      "practice": "A partir de documentos e dados sintéticos, revisar um rascunho de proposta produzido por IA e mapear cada afirmação material para sua respectiva fonte, marcando lacunas de proveniência.",
+      "evidence_expected": "Mapa de evidências do tipo AFIRMAÇÃO → FONTE → STATUS_DE_VERIFICAÇÃO, com itens sem origem confiável destacados para revisão humana."
+    },
+    {
+      "skill_id": "AI-02",
+      "title": "Prompting Orientado a Objetivo",
+      "domain": "ai",
+      "level": "L2",
+      "prerequisites": [],
+      "critical_security": false,
+      "objective": "Formular prompts que orientem a IA para um resultado verificável, deixando explícito o que deve ser produzido, o que não pode ser inventado e quando o sistema deve declarar informação insuficiente.",
+      "practice": "Criar um prompt para gerar um rascunho de proposta a partir de informações sintéticas, exigindo que a IA use somente os dados fornecidos, identifique lacunas e marque qualquer ponto que dependa de decisão humana.",
+      "evidence_expected": "Prompt estruturado acompanhado de checklist demonstrando: objetivo, fonte permitida, restrições, tratamento de lacunas, critérios de aceite e pontos reservados à decisão humana."
+    },
+    {
+      "skill_id": "HU-01",
+      "title": "Pensamento Crítico e Revisão de Outputs",
+      "domain": "human",
+      "level": "L2",
+      "prerequisites": [],
+      "critical_security": false,
+      "objective": "Transformar a revisão de um output de IA em uma decisão humana explícita e justificável, em vez de aceitar ou rejeitar a resposta de forma intuitiva.",
+      "practice": "Receber um rascunho sintético de proposta gerado por IA, confrontá-lo com as fontes disponíveis e decidir quais trechos podem permanecer, quais precisam de correção e quais devem ser removidos.",
+      "evidence_expected": "Registro de revisão no formato TRECHO → EVIDÊNCIA → DECISÃO → JUSTIFICATIVA, deixando claro o que foi mantido, modificado ou rejeitado."
+    },
+    {
+      "skill_id": "HU-02",
+      "title": "Human-in-the-Loop",
+      "domain": "human",
+      "level": "L2",
+      "prerequisites": [],
+      "critical_security": false,
+      "objective": "Aplicar Human-in-the-Loop como um controle explícito no fluxo de trabalho, definindo quais condições permitem continuidade e quais exigem aprovação, correção ou interrupção humana.",
+      "practice": "Receber um fluxo sintético em que a IA resume documentos e prepara uma proposta inicial e definir Human Gates para situações como dado sensível, evidência insuficiente, alteração material de conteúdo e envio externo.",
+      "evidence_expected": "Fluxo decisório no formato CONDIÇÃO → AÇÃO_DA_IA → HUMAN_GATE → DECISÃO_HUMANA → PRÓXIMA_ETAPA, demonstrando claramente onde termina a autonomia da IA."
+    },
+    {
+      "skill_id": "HU-03",
+      "title": "Explicabilidade",
+      "domain": "human",
+      "level": "L2",
+      "prerequisites": [],
+      "critical_security": false,
+      "objective": "Comunicar de forma clara e auditável por que uma recomendação assistida por IA foi aceita, modificada ou rejeitada, distinguindo evidência, inferência e decisão humana.",
+      "practice": "A partir de um cenário sintético já revisado, preparar uma explicação curta para um gestor indicando o que a IA propôs, quais evidências foram verificadas, quais riscos foram encontrados e por que a decisão humana final foi tomada.",
+      "evidence_expected": "Resumo explicativo no formato PROPOSTA_DA_IA → EVIDÊNCIA_VERIFICADA → RISCO/LIMITAÇÃO → DECISÃO_HUMANA → JUSTIFICATIVA."
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": "TRK-AI-SAFE-DOCS-01",
+      "title": "IA Confiável: Dados, Segurança e Supervisão Humana",
+      "role_ids": ["finance_admin_sme"],
+      "target_goals": ["safe_ai_document_work"],
+      "goal_tags": [
+        "document_summary",
+        "proposal_drafting",
+        "data_analysis",
+        "sensitive_data_handling",
+        "human_review"
+      ],
+      "why_this_track": "Esta trilha foi escolhida porque o objetivo de Marina não é apenas aprender a usar IA, mas utilizá-la com dados adequados, controles de segurança e supervisão humana. A sequência desenvolve primeiro os fundamentos e os controles necessários para depois aplicar prompting, revisão crítica e Human-in-the-Loop de forma responsável.",
+      "prerequisites": [],
+      "module_sequence": [
+        "AI-01",
+        "CY-01",
+        "DA-01",
+        "DA-05",
+        "AI-02",
+        "HU-01",
+        "HU-02",
+        "HU-03"
+      ],
+      "final_challenge_id": null
+    }
+  ],
+  "personas": [
+    {
+      "persona_id": "MARINA-01",
+      "name": "Marina — Fictício/Sintético",
+      "role": "finance_admin_sme",
+      "current_level": "L1",
+      "target_level": "L2",
+      "target_goal": "safe_ai_document_work",
+      "risk_context": "sensitive_data"
+    }
+  ],
+  "valid_levels": ["L0", "L1", "L2", "L3"],
+  "sensitive_risk_keywords": [
+    "sensitive_data",
+    "confidential",
+    "dados_sensiveis",
+    "dado_sensivel",
+    "confidencial"
+  ]
+}
