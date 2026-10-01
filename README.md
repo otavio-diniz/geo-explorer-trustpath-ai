@@ -305,6 +305,14 @@ A fonte oficial disponibilizada para o desafio define o Geo-Explorer, seus três
 
 A menção à DIO e à IBM registra a origem acadêmica e tecnológica do desafio e **não implica endosso, aprovação, certificação ou vínculo profissional** dessas organizações sobre esta implementação autoral.
 
+## Orientação acadêmica e convite a feedback
+
+Agradeço à **DIO** pelo contexto educacional e pela proposta do desafio Geo-Explorer, e à **IBM** pelo ecossistema tecnológico associado ao **IBM Bob**, utilizado como apoio durante o processo de desenvolvimento e experimentação deste projeto.
+
+Se instrutores, profissionais da DIO, da IBM ou pessoas ligadas ao programa encontrarem este repositório, **feedback técnico e de produto é bem-vindo**, especialmente sobre clareza da arquitetura, MCP read-only, segurança, Human-in-the-Loop, rastreabilidade e evolução do protótipo.
+
+A referência à DIO, à IBM e ao IBM Bob registra origem acadêmica, contexto tecnológico e agradecimento pelo programa; **não implica endosso, avaliação, certificação, parceria ou vínculo profissional** dessas partes com esta implementação autoral.
+
 ---
 
 **Geo-Explorer — TrustPath AI**  
