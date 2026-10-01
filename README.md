@@ -11,12 +11,13 @@ Projeto desenvolvido no contexto do **Desafio de Projeto Geo-Explorer — DIO / 
 - **Core MVP:** concluído e validado.
 - **Fluxo funcional:** `/trilha → /desafio → evidências sintéticas → /certificado`.
 - **MCP read-only:** concluído e validado por `stdio`.
-- **Testes independentes:** **108/108 PASS** — 93 Core + 15 MCP.
+- **Baseline independente de referência:** **108/108 PASS** — 93 Core + 15 MCP.
+- **Piloto Windows de 2026-09-30:** Core e MCP funcionais; suíte local **107/108** devido a um finding de portabilidade de line endings no guard de hash `M15_CORE_REGRESSION_GUARD`; correção técnica pendente.
 - **Catálogo sintético:** imutabilidade validada.
 - **GitHub:** superfície pública de portfólio e demonstração técnica.
 - **Submissão à DIO:** ação humana separada; não é inferida pelo estado técnico do repositório.
 
-O projeto está tecnicamente concluído como **protótipo educacional e case de portfólio**, sem alegação de produto comercial, prontidão para produção ou aprovação institucional pela DIO/IBM.
+O projeto está tecnicamente concluído como **protótipo educacional e case de portfólio**, sem alegação de produto comercial, prontidão para produção ou aprovação institucional pela DIO/IBM. O finding Windows não alterou o comportamento funcional observado do Core ou do MCP, mas impede tratar o baseline 108/108 como garantia de reprodução em toda configuração de checkout até a correção de portabilidade ser homologada.
 
 ## Resumo
 
@@ -51,6 +52,24 @@ evidências sintéticas
 ```
 
 O exemplo descreve o fluxo do protótipo; não representa emissão institucional de certificado.
+
+## Quickstart — do clone à primeira validação
+
+Pré-requisitos: **Git** e **Node.js 24+**.
+
+```bash
+git clone https://github.com/otavio-diniz/geo-explorer-trustpath-ai.git
+cd geo-explorer-trustpath-ai
+node -v
+npm ci
+npm test
+```
+
+Use uma pasta gravável do seu usuário; em Windows, evite clonar em diretórios protegidos como `C:\Windows\System32`.
+
+Para reproduzir o piloto completo — incluindo `/trilha`, guardrail `CY-01`, `/desafio`, `/certificado`, bloqueio institucional, MCP read-only, sessão MCP real por `stdio`, saídas esperadas e troubleshooting — consulte:
+
+**[`docs/PILOT_GUIDE.md`](docs/PILOT_GUIDE.md) — Guia de Piloto Reproduzível**.
 
 ## Como usar os comandos
 
@@ -176,11 +195,15 @@ Para iniciar o servidor MCP:
 node mcp/server.js
 ```
 
-O processo usa `stdio` como transporte MCP. Um host MCP deve iniciar esse comando e tratar `stdout` exclusivamente como canal do protocolo.
+O processo usa `stdio` como transporte MCP. Um host MCP deve iniciar esse comando e tratar `stdout` exclusivamente como canal do protocolo. Para uma sessão cliente-servidor reproduzível e instruções específicas de Windows, consulte [`docs/PILOT_GUIDE.md`](docs/PILOT_GUIDE.md).
 
 ## Validação e evidências
 
-Validação independente reproduziu **108/108 testes aprovados**, sendo **93 testes do Core** e **15 testes MCP**, com zero falhas.
+A validação independente que originou o baseline público reproduziu **108/108 testes aprovados**, sendo **93 testes do Core** e **15 testes MCP**, com zero falhas naquele ambiente.
+
+Um piloto posterior em Windows, em 2026-09-30, reproduziu o Core e o MCP funcionalmente, mas encontrou **107/108** na suíte completa: somente `M15_CORE_REGRESSION_GUARD` falhou porque o guard calcula SHA-256 dos bytes físicos enquanto um checkout com `core.autocrlf=true` materializou arquivos LF como CRLF. O Git permaneceu com working tree limpo. A correção de portabilidade está pendente de validação técnica.
+
+Até essa correção ser homologada, o número **108/108** deve ser lido como baseline independente de referência, e não como evidência de portabilidade universal.
 
 A suíte cobre, entre outros pontos:
 
@@ -193,15 +216,16 @@ A suíte cobre, entre outros pontos:
 - sessão MCP real por `stdio` com `initialize`, `tools/list` e `tools/call`;
 - rejeição nativa de tool inexistente pelo protocolo MCP.
 
-> O número de testes representa a suíte validada neste estado do repositório; não é métrica de eficácia educacional, adoção ou qualidade de mercado.
+> O número de testes representa a suíte validada no respectivo ambiente/estado do repositório; não é métrica de eficácia educacional, adoção ou qualidade de mercado.
 
 ## Estrutura principal
 
 ```text
 commands/              comandos do Core
 data/synthetic/        catálogo e dados fictícios
-mcp/                   servidor MCP read-only
-tests/                 testes automatizados
+docs/                   documentação reproduzível de uso e piloto
+mcp/                    servidor MCP read-only
+tests/                  testes automatizados
 ```
 
 Arquivos de governança operacional, prompts internos, logs de agentes e evidências administrativas não pertencem à superfície pública do projeto.
@@ -218,7 +242,8 @@ A implementação foi deliberadamente além do fluxo mínimo do exercício sem d
 - MCP read-only com quatro tools e data minimization;
 - testes adversariais e regressivos sobre inputs malformados, referências ausentes/incompatíveis, imutabilidade e protocolo `stdio`;
 - separação explícita entre conteúdo público de portfólio e governança operacional interna;
-- camada pública de autoria, licença, segurança e contribuição.
+- camada pública de autoria, licença, segurança e contribuição;
+- guia reproduzível de piloto para reduzir dependência de conhecimento tácito do autor.
 
 ## Segurança, privacidade e integridade
 
@@ -243,6 +268,8 @@ Uma suíte verde demonstra que a implementação passa nos testes existentes; el
 
 Outro aprendizado foi separar falha de aplicação de falha do ambiente: dependências e Core foram reproduzidos em substrato local confiável antes de prosseguir com a implementação MCP.
 
+O piloto Windows adicionou um aprendizado operacional: **reprodutibilidade também inclui diferenças de ambiente e materialização do working tree**. Um guard de integridade baseado em bytes pode ser semanticamente correto e ainda depender de convenções de line ending; por isso, resultados de um único substrato não devem ser promovidos silenciosamente como portabilidade universal.
+
 Também se confirmou que **bloquear com segurança** pode ser o comportamento correto de um agente quando autorização, contexto ou substrato técnico não sustentam a continuação.
 
 ## Limitações
@@ -251,6 +278,7 @@ Também se confirmou que **bloquear com segurança** pode ser o comportamento co
 - Não comprova eficácia educacional, product-market fit ou conformidade regulatória.
 - Dados e certificados são fictícios/demonstrativos.
 - O MCP foi validado como servidor local `stdio`; integrações com hosts específicos dependem da configuração de cada host.
+- O guard de hash `M15_CORE_REGRESSION_GUARD` possui finding conhecido de portabilidade em checkout Windows com conversão LF→CRLF, pendente de correção técnica.
 - Métricas de valor e adoção permanecem hipóteses quando não há baseline observável.
 - A publicação deste repositório não implica endosso, aprovação ou vínculo profissional com DIO, IBM ou terceiros citados.
 
@@ -277,6 +305,7 @@ A licença proprietária permite a avaliadores, instrutores, recrutadores e revi
 - Autoria, finalidade pública e terceiros: [`NOTICE.md`](NOTICE.md)
 - Política de segurança: [`SECURITY.md`](SECURITY.md)
 - Orientações de contribuição: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Piloto reproduzível: [`docs/PILOT_GUIDE.md`](docs/PILOT_GUIDE.md)
 
 A disponibilidade pública continua sujeita às funcionalidades e aos Termos de Serviço do GitHub.
 
@@ -309,7 +338,7 @@ A menção à DIO e à IBM registra a origem acadêmica e tecnológica do desafi
 
 Agradeço à **DIO** pelo contexto educacional e pela proposta do desafio Geo-Explorer, e à **IBM** pelo ecossistema tecnológico associado ao **IBM Bob**, utilizado como apoio durante o processo de desenvolvimento e experimentação deste projeto.
 
-Se instrutores, profissionais da DIO, da IBM ou pessoas ligadas ao programa encontrarem este repositório, **feedback técnico e de produto é bem-vindo**, especialmente sobre clareza da arquitetura, MCP read-only, segurança, Human-in-the-Loop, rastreabilidade e evolução do protótipo.
+Se instrutores, profissionais da DIO, da IBM ou pessoas ligadas ao programa encontrarem este repositório, **feedback técnico e de produto é bem-vindo**, especialmente sobre clareza da arquitetura, MCP read-only, segurança, Human-in-the-Loop, rastreabilidade, reprodutibilidade e evolução do protótipo.
 
 A referência à DIO, à IBM e ao IBM Bob registra origem acadêmica, contexto tecnológico e agradecimento pelo programa; **não implica endosso, avaliação, certificação, parceria ou vínculo profissional** dessas partes com esta implementação autoral.
 
