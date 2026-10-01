@@ -6,19 +6,6 @@ Projeto desenvolvido no contexto do **Desafio de Projeto Geo-Explorer — DIO / 
 
 > **Autoria e direitos:** © 2026 Otávio Diniz. Todos os direitos reservados sobre os materiais autorais específicos deste projeto, observados os direitos de terceiros. Este repositório é público para avaliação acadêmica, demonstração técnica e portfólio. A publicação pública **não constitui licença open source**. Consulte [`LICENSE`](LICENSE) e [`NOTICE.md`](NOTICE.md).
 
-## Estado do projeto
-
-- **Core MVP:** concluído e validado.
-- **Fluxo funcional:** `/trilha → /desafio → evidências sintéticas → /certificado`.
-- **MCP read-only:** concluído e validado por `stdio`.
-- **Baseline independente de referência:** **108/108 PASS** — 93 Core + 15 MCP.
-- **Piloto Windows de 2026-09-30:** Core e MCP funcionais; suíte local **107/108** devido a um finding de portabilidade de line endings no guard de hash `M15_CORE_REGRESSION_GUARD`; correção técnica pendente.
-- **Catálogo sintético:** imutabilidade validada.
-- **GitHub:** superfície pública de portfólio e demonstração técnica.
-- **Submissão à DIO:** ação humana separada; não é inferida pelo estado técnico do repositório.
-
-O projeto está tecnicamente concluído como **protótipo educacional e case de portfólio**, sem alegação de produto comercial, prontidão para produção ou aprovação institucional pela DIO/IBM. O finding Windows não alterou o comportamento funcional observado do Core ou do MCP, mas impede tratar o baseline 108/108 como garantia de reprodução em toda configuração de checkout até a correção de portabilidade ser homologada.
-
 ## Resumo
 
 O Geo-Explorer — TrustPath AI é um protótipo educacional que transforma perfil, objetivo de uso de IA e contexto de risco em uma jornada estruturada de aprendizagem. O fluxo central conecta uma trilha determinística, um desafio prático baseado em evidências sintéticas e um certificado exclusivamente fictício/demonstrativo.
@@ -37,8 +24,6 @@ Profissionais e pequenas organizações podem adotar IA mais rapidamente do que 
 - **`/desafio`** — entrega o TrustPath Decision Gate, um desafio sintético centrado em evidência, proveniência, minimização de dados e Human-in-the-Loop. A solução permanece responsabilidade do participante.
 - **`/certificado`** — gera exclusivamente um certificado fictício/demonstrativo após o atendimento dos critérios didáticos e associação das evidências sintéticas exigidas.
 
-### Exemplo de jornada
-
 ```text
 perfil + objetivo + risco
         ↓
@@ -51,7 +36,19 @@ evidências sintéticas
    /certificado
 ```
 
-O exemplo descreve o fluxo do protótipo; não representa emissão institucional de certificado.
+O fluxo descreve o protótipo; não representa emissão institucional de certificado.
+
+## Estado do projeto
+
+- **Core MVP:** concluído e validado funcionalmente.
+- **Fluxo funcional:** `/trilha → /desafio → evidências sintéticas → /certificado`.
+- **MCP read-only:** concluído e validado por `stdio`.
+- **Validação:** baseline independente de referência **108/108 PASS**; piloto Windows posterior encontrou **107/108** por um finding de portabilidade no guard de hash `M15_CORE_REGRESSION_GUARD`. Consulte [Validação e evidências](#validação-e-evidências).
+- **Catálogo sintético:** imutabilidade validada.
+- **GitHub:** superfície pública de portfólio e demonstração técnica.
+- **Submissão à DIO:** ação humana separada; não é inferida pelo estado técnico do repositório.
+
+A implementação funcional está concluída como **protótipo educacional e case de portfólio**. Permanece aberto o finding técnico de portabilidade do regression guard em determinados checkouts Windows; ele não alterou o comportamento funcional observado do Core ou do MCP, mas impede tratar 108/108 como garantia cross-platform até a correção ser homologada.
 
 ## Quickstart — do clone à primeira validação
 
@@ -65,15 +62,15 @@ npm ci
 npm test
 ```
 
-Use uma pasta gravável do seu usuário; em Windows, evite clonar em diretórios protegidos como `C:\Windows\System32`.
+Use uma pasta gravável do seu usuário; em Windows, evite diretórios protegidos como `C:\Windows\System32`.
 
 Para reproduzir o piloto completo — incluindo `/trilha`, guardrail `CY-01`, `/desafio`, `/certificado`, bloqueio institucional, MCP read-only, sessão MCP real por `stdio`, saídas esperadas e troubleshooting — consulte:
 
 **[`docs/PILOT_GUIDE.md`](docs/PILOT_GUIDE.md) — Guia de Piloto Reproduzível**.
 
-## Como usar os comandos
+## Como usar o Core
 
-Os nomes `/trilha`, `/desafio` e `/certificado` representam o fluxo funcional do projeto. Na implementação atual, eles são funções JavaScript ESM exportadas pelos arquivos em `commands/`.
+Os nomes `/trilha`, `/desafio` e `/certificado` representam o fluxo funcional do projeto. Na implementação atual, eles são funções JavaScript ESM exportadas pelos arquivos em `commands/`. Esta versão não possui interface gráfica.
 
 ### `/trilha`
 
@@ -147,7 +144,15 @@ Tools registradas:
 
 O servidor usa um caminho interno fixo para o catálogo, não aceita paths ou URLs arbitrários e não executa rede, shell, Git ou escrita de filesystem durante o runtime.
 
-## Arquitetura
+### Executar o servidor MCP
+
+```bash
+node mcp/server.js
+```
+
+O processo usa `stdio` como transporte MCP. Um host MCP deve iniciar esse comando e tratar `stdout` exclusivamente como canal do protocolo. Para uma sessão cliente-servidor reproduzível e instruções específicas de Windows, consulte [`docs/PILOT_GUIDE.md`](docs/PILOT_GUIDE.md).
+
+## Arquitetura e estrutura
 
 ```text
 Perfil + objetivo + contexto de risco
@@ -170,7 +175,19 @@ Perfil + objetivo + contexto de risco
       comandos   MCP read-only
 ```
 
-## Stack
+Estrutura principal:
+
+```text
+commands/              comandos do Core
+data/synthetic/        catálogo e dados fictícios
+docs/                   documentação reproduzível de uso e piloto
+mcp/                    servidor MCP read-only
+tests/                  testes automatizados
+```
+
+Arquivos de governança operacional, prompts internos, logs de agentes e evidências administrativas não pertencem à superfície pública do projeto.
+
+### Stack
 
 - Node.js 24+
 - JavaScript ESM
@@ -179,23 +196,6 @@ Perfil + objetivo + contexto de risco
 - `node:assert/strict`
 - `@modelcontextprotocol/server` 2.2.0
 - `zod` 4.6.5
-
-## Instalação e execução
-
-Pré-requisito: Node.js 24+.
-
-```bash
-npm ci
-npm test
-```
-
-Para iniciar o servidor MCP:
-
-```bash
-node mcp/server.js
-```
-
-O processo usa `stdio` como transporte MCP. Um host MCP deve iniciar esse comando e tratar `stdout` exclusivamente como canal do protocolo. Para uma sessão cliente-servidor reproduzível e instruções específicas de Windows, consulte [`docs/PILOT_GUIDE.md`](docs/PILOT_GUIDE.md).
 
 ## Validação e evidências
 
@@ -218,17 +218,21 @@ A suíte cobre, entre outros pontos:
 
 > O número de testes representa a suíte validada no respectivo ambiente/estado do repositório; não é métrica de eficácia educacional, adoção ou qualidade de mercado.
 
-## Estrutura principal
+## Segurança, privacidade e limitações
 
-```text
-commands/              comandos do Core
-data/synthetic/        catálogo e dados fictícios
-docs/                   documentação reproduzível de uso e piloto
-mcp/                    servidor MCP read-only
-tests/                  testes automatizados
-```
-
-Arquivos de governança operacional, prompts internos, logs de agentes e evidências administrativas não pertencem à superfície pública do projeto.
+- O MVP utiliza dados fictícios/sintéticos.
+- Credenciais e dados reais não são necessários para o fluxo demonstrativo.
+- Lacunas de evidência falham de forma controlada.
+- Ações materiais e decisões finais permanecem humanas.
+- O desafio enfatiza minimização de dados, proveniência e Human-in-the-Loop.
+- O MCP é read-only, sem rede, shell ou escrita de filesystem no runtime.
+- O certificado do protótipo é fictício/demonstrativo e não possui validade institucional ou profissional.
+- Vulnerabilidades e incidentes devem seguir [`SECURITY.md`](SECURITY.md).
+- O projeto é um protótipo educacional; não é produto comercial ou solução pronta para produção.
+- Não comprova eficácia educacional, product-market fit ou conformidade regulatória.
+- O MCP foi validado como servidor local `stdio`; integrações com hosts específicos dependem da configuração de cada host.
+- O guard de hash `M15_CORE_REGRESSION_GUARD` possui finding conhecido de portabilidade em checkout Windows com conversão LF→CRLF, pendente de correção técnica.
+- Métricas de valor e adoção permanecem hipóteses quando não há baseline observável.
 
 ## Melhorias realizadas sobre o fluxo-base
 
@@ -245,42 +249,19 @@ A implementação foi deliberadamente além do fluxo mínimo do exercício sem d
 - camada pública de autoria, licença, segurança e contribuição;
 - guia reproduzível de piloto para reduzir dependência de conhecimento tácito do autor.
 
-## Segurança, privacidade e integridade
-
-- O MVP utiliza dados fictícios/sintéticos.
-- Credenciais e dados reais não são necessários para o fluxo demonstrativo.
-- Lacunas de evidência falham de forma controlada.
-- Ações materiais e decisões finais permanecem humanas.
-- O desafio enfatiza minimização de dados, proveniência e Human-in-the-Loop.
-- O MCP é read-only, sem rede, shell ou escrita de filesystem no runtime.
-- O certificado do protótipo é fictício/demonstrativo e não possui validade institucional ou profissional.
-- Vulnerabilidades e incidentes devem seguir [`SECURITY.md`](SECURITY.md).
-
-## Desenvolvimento assistido por IA
+## Desenvolvimento assistido por IA e aprendizados
 
 O IBM Bob foi utilizado como agente de apoio em planejamento, implementação controlada, testes e operações de versionamento. O processo reforçou três práticas: tarefas estreitas e verificáveis, revisão independente do contrato mesmo após suítes verdes e interrupção segura quando o ambiente técnico não sustentava a próxima ação.
 
 O projeto preserva a distinção entre proposta do agente, decisão humana, teste e resultado observado. Logs operacionais, prompts, reprompts e métricas internas de execução permanecem fora da superfície pública.
 
-## Aprendizados
+Principais aprendizados:
 
-Uma suíte verde demonstra que a implementação passa nos testes existentes; ela não prova, isoladamente, que os testes representam todo o contrato. Durante o projeto, a revisão independente encontrou divergências semânticas mesmo após execuções verdes e direcionou correções específicas.
-
-Outro aprendizado foi separar falha de aplicação de falha do ambiente: dependências e Core foram reproduzidos em substrato local confiável antes de prosseguir com a implementação MCP.
-
-O piloto Windows adicionou um aprendizado operacional: **reprodutibilidade também inclui diferenças de ambiente e materialização do working tree**. Um guard de integridade baseado em bytes pode ser semanticamente correto e ainda depender de convenções de line ending; por isso, resultados de um único substrato não devem ser promovidos silenciosamente como portabilidade universal.
-
-Também se confirmou que **bloquear com segurança** pode ser o comportamento correto de um agente quando autorização, contexto ou substrato técnico não sustentam a continuação.
-
-## Limitações
-
-- Protótipo educacional; não é produto comercial ou solução pronta para produção.
-- Não comprova eficácia educacional, product-market fit ou conformidade regulatória.
-- Dados e certificados são fictícios/demonstrativos.
-- O MCP foi validado como servidor local `stdio`; integrações com hosts específicos dependem da configuração de cada host.
-- O guard de hash `M15_CORE_REGRESSION_GUARD` possui finding conhecido de portabilidade em checkout Windows com conversão LF→CRLF, pendente de correção técnica.
-- Métricas de valor e adoção permanecem hipóteses quando não há baseline observável.
-- A publicação deste repositório não implica endosso, aprovação ou vínculo profissional com DIO, IBM ou terceiros citados.
+- uma suíte verde demonstra que a implementação passa nos testes existentes; não prova, isoladamente, que os testes representam todo o contrato;
+- falha de aplicação e falha de ambiente precisam ser distinguidas antes de corrigir;
+- reprodutibilidade inclui diferenças de ambiente e materialização do working tree;
+- um guard de integridade baseado em bytes pode depender de convenções de line ending mesmo quando o conteúdo lógico não mudou;
+- **bloquear com segurança** pode ser o comportamento correto quando autorização, contexto ou substrato técnico não sustentam a continuação.
 
 ## Roadmap opcional
 
@@ -295,11 +276,30 @@ Itens deliberadamente fora do caminho crítico desta entrega:
 
 Roadmap representa possibilidades futuras, não funcionalidades implementadas.
 
-## Autoria, licença e uso público
+## Contexto acadêmico e créditos
+
+Projeto desenvolvido no contexto do Desafio de Projeto Geo-Explorer do bootcamp DIO / IBM Bob, adaptando o exercício base para um caso de capacitação responsável em IA com dados sintéticos, testes automatizados, documentação, GitHub e integração MCP.
+
+A fonte oficial disponibilizada para o desafio define o Geo-Explorer, seus três comandos, testes, documentação, publicação em GitHub e a etapa MCP. Ela não fornece, no material autenticado deste projeto, um repositório público de referência ou identificação do expert que possa ser atribuída com segurança; por isso esses dados não são inventados aqui.
+
+Agradeço à **DIO** pelo contexto educacional e pela proposta do desafio Geo-Explorer, e à **IBM** pelo ecossistema tecnológico associado ao **IBM Bob**, utilizado como apoio durante o processo de desenvolvimento e experimentação deste projeto.
+
+A referência à DIO, à IBM e ao IBM Bob registra origem acadêmica, contexto tecnológico e agradecimento pelo programa; **não implica endosso, avaliação, certificação, parceria ou vínculo profissional** dessas partes com esta implementação autoral.
+
+## Autoria, licença e direitos de terceiros
 
 O Geo-Explorer — TrustPath AI é um projeto autoral de **Otávio Diniz**. O repositório permanece público para avaliação acadêmica, inspeção técnica, demonstração e portfólio, mas **não adota licença open source**.
 
 A licença proprietária permite a avaliadores, instrutores, recrutadores e revisores inspecionar, clonar/baixar e executar o projeto na medida necessária para avaliação ou reprodução da demonstração documentada. Outros usos dependem dos termos completos.
+
+As dependências e tecnologias de terceiros permanecem sob suas próprias licenças e termos. Entre as dependências diretas deste estado do projeto:
+
+- `@modelcontextprotocol/server` 2.2.0 — Apache-2.0;
+- `zod` 4.6.5 — MIT.
+
+Model Context Protocol, Node.js, DIO, IBM e demais nomes/marcas citados pertencem aos respectivos titulares quando aplicável.
+
+Documentos de referência:
 
 - Termos de uso: [`LICENSE`](LICENSE)
 - Autoria, finalidade pública e terceiros: [`NOTICE.md`](NOTICE.md)
@@ -309,38 +309,13 @@ A licença proprietária permite a avaliadores, instrutores, recrutadores e revi
 
 A disponibilidade pública continua sujeita às funcionalidades e aos Termos de Serviço do GitHub.
 
-## Componentes e direitos de terceiros
-
-As dependências e tecnologias de terceiros permanecem sob suas próprias licenças e termos.
-
-Entre as dependências diretas deste estado do projeto:
-
-- `@modelcontextprotocol/server` 2.2.0 — Apache-2.0;
-- `zod` 4.6.5 — MIT.
-
-Model Context Protocol, Node.js, DIO, IBM e demais nomes/marcas citados pertencem aos respectivos titulares quando aplicável. Consulte [`NOTICE.md`](NOTICE.md) para o enquadramento de proveniência e direitos.
-
 ## Contribuição e feedback
 
-Feedback técnico e de produto é bem-vindo. Como este é um projeto acadêmico autoral e publicado sob licença proprietária, contribuições de código não são presumidamente aceitas. Consulte [`CONTRIBUTING.md`](CONTRIBUTING.md) antes de abrir uma Pull Request.
+Feedback técnico e de produto é bem-vindo, inclusive sobre clareza da arquitetura, MCP read-only, segurança, Human-in-the-Loop, rastreabilidade, reprodutibilidade e evolução do protótipo.
+
+Como este é um projeto acadêmico autoral e publicado sob licença proprietária, contribuições de código não são presumidamente aceitas. Consulte [`CONTRIBUTING.md`](CONTRIBUTING.md) antes de abrir uma Pull Request.
 
 Não publique segredos, credenciais, dados pessoais ou detalhes exploráveis de vulnerabilidades em issues públicas; consulte [`SECURITY.md`](SECURITY.md).
-
-## Contexto acadêmico
-
-Projeto desenvolvido no contexto do Desafio de Projeto Geo-Explorer do bootcamp DIO / IBM Bob, adaptando o exercício base para um caso de capacitação responsável em IA com dados sintéticos, testes automatizados, documentação, GitHub e integração MCP.
-
-A fonte oficial disponibilizada para o desafio define o Geo-Explorer, seus três comandos, testes, documentação, publicação em GitHub e a etapa MCP. Ela não fornece, no material autenticado deste projeto, um repositório público de referência ou identificação do expert que possa ser atribuída com segurança; por isso esses dados não são inventados aqui.
-
-A menção à DIO e à IBM registra a origem acadêmica e tecnológica do desafio e **não implica endosso, aprovação, certificação ou vínculo profissional** dessas organizações sobre esta implementação autoral.
-
-## Orientação acadêmica e convite a feedback
-
-Agradeço à **DIO** pelo contexto educacional e pela proposta do desafio Geo-Explorer, e à **IBM** pelo ecossistema tecnológico associado ao **IBM Bob**, utilizado como apoio durante o processo de desenvolvimento e experimentação deste projeto.
-
-Se instrutores, profissionais da DIO, da IBM ou pessoas ligadas ao programa encontrarem este repositório, **feedback técnico e de produto é bem-vindo**, especialmente sobre clareza da arquitetura, MCP read-only, segurança, Human-in-the-Loop, rastreabilidade, reprodutibilidade e evolução do protótipo.
-
-A referência à DIO, à IBM e ao IBM Bob registra origem acadêmica, contexto tecnológico e agradecimento pelo programa; **não implica endosso, avaliação, certificação, parceria ou vínculo profissional** dessas partes com esta implementação autoral.
 
 ---
 
