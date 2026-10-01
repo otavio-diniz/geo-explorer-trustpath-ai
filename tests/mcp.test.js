@@ -19,7 +19,8 @@ const TRACK_ID = 'TRK-AI-SAFE-DOCS-01';
 const CHALLENGE_ID = 'CH-TRK-AI-SAFE-DOCS-01-L2-01';
 
 function sha256(path) {
-  return createHash('sha256').update(readFileSync(path)).digest('hex').toUpperCase();
+  const canonical = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
+  return createHash('sha256').update(canonical, 'utf8').digest('hex').toUpperCase();
 }
 
 function api() {

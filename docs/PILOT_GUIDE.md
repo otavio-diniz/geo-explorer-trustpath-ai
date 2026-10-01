@@ -80,13 +80,13 @@ npm test
 
 `npm ci` restaura as dependências descritas no `package-lock.json` sem modificar deliberadamente o código-fonte.
 
-### Baseline de referência e finding conhecido no Windows
+### Baseline de referência e portabilidade do M15
 
 A validação independente que originou o baseline público registrou **108/108 testes aprovados** — 93 Core + 15 MCP.
 
 Em um piloto posterior realizado em Windows em **2026-09-30**, com `core.autocrlf=true`, o Core e o MCP funcionaram, mas a suíte local terminou em **107/108**: somente `M15_CORE_REGRESSION_GUARD` falhou porque o teste calcula SHA-256 dos bytes físicos de arquivos armazenados em LF e materializados no working tree em CRLF. O Git permaneceu com working tree limpo.
 
-Até a correção técnica de portabilidade ser homologada, trate **108/108 como baseline de referência**, e não como garantia para toda configuração de checkout.
+Em 2026-10-01, a correção foi homologada localmente no mesmo HEAD em dois clones limpos Windows: `core.autocrlf=true` (working tree CRLF) e `core.autocrlf=false` (working tree LF), ambos com **108/108 PASS**. O guard agora normaliza CRLF para LF antes do SHA-256; mudança apenas de line ending passa, enquanto mutação material controlada continua falhando. Linux/macOS não foram executados nesta rodada.
 
 Se ocorrer apenas esse finding em Windows, colete antes de qualquer alteração:
 
@@ -96,7 +96,7 @@ git config --get core.autocrlf
 git ls-files --eol commands/trilha.js tests/mcp.test.js
 ```
 
-Não substitua o hash esperado por um hash específico de CRLF e não altere o código por tentativa e erro. O objetivo da correção é preservar o contrato e tornar a validação portável.
+Não substitua o hash esperado por um hash específico de CRLF. O baseline continua expresso em conteúdo canônico LF; o guard normaliza CRLF para LF antes do SHA-256 para ignorar apenas a variação de checkout e continuar detectando alteração material.
 
 ## 5. Pilotando `/trilha`
 
@@ -265,7 +265,7 @@ A versão atual do projeto declara Node.js 24+ como requisito. Atualize o runtim
 
 ### `npm test` falha somente em `M15_CORE_REGRESSION_GUARD` no Windows
 
-Verifique o estado Git e os line endings conforme a seção 4. Um working tree limpo com index LF e working tree CRLF caracteriza o finding de portabilidade observado em 2026-09-30. A correção técnica deve ser feita no projeto de forma portável, não por troca ad hoc de hashes locais.
+Verifique primeiro o HEAD, o estado Git e os line endings conforme a seção 4. O finding de 2026-09-30 ocorria em revisões cujo M15 hasheava bytes físicos. Na versão corrigida, working trees LF e CRLF equivalentes devem passar; uma falha do M15 deve ser tratada como possível revisão antiga ou alteração material até evidência em contrário. Não troque hashes ad hoc.
 
 ### `node mcp/server.js` parece não fazer nada
 

@@ -43,12 +43,12 @@ O fluxo descreve o protótipo; não representa emissão institucional de certifi
 - **Core MVP:** concluído e validado funcionalmente.
 - **Fluxo funcional:** `/trilha → /desafio → evidências sintéticas → /certificado`.
 - **MCP read-only:** concluído e validado por `stdio`.
-- **Validação:** baseline independente de referência **108/108 PASS**; piloto Windows posterior encontrou **107/108** por um finding de portabilidade no guard de hash `M15_CORE_REGRESSION_GUARD`. Consulte [Validação e evidências](#validação-e-evidências).
+- **Validação:** baseline independente de referência **108/108 PASS**; o piloto Windows de 2026-09-30 encontrou **107/108** por um finding de portabilidade no guard `M15_CORE_REGRESSION_GUARD`, corrigido e homologado em 2026-10-01 em checkouts Windows CRLF e LF, ambos **108/108 PASS**. Consulte [Validação e evidências](#validação-e-evidências).
 - **Catálogo sintético:** imutabilidade validada.
 - **GitHub:** superfície pública de portfólio e demonstração técnica.
 - **Submissão à DIO:** ação humana separada; não é inferida pelo estado técnico do repositório.
 
-A implementação funcional está concluída como **protótipo educacional e case de portfólio**. Permanece aberto o finding técnico de portabilidade do regression guard em determinados checkouts Windows; ele não alterou o comportamento funcional observado do Core ou do MCP, mas impede tratar 108/108 como garantia cross-platform até a correção ser homologada.
+A implementação funcional está concluída como **protótipo educacional e case de portfólio**. O finding técnico de portabilidade do regression guard foi reproduzido e corrigido por normalização canônica de CRLF para LF antes do SHA-256. A homologação local cobriu checkouts Windows CRLF e LF; Linux/macOS não foram executados nesta rodada e não são inferidos por essa evidência.
 
 ## Quickstart — do clone à primeira validação
 
@@ -201,9 +201,9 @@ Arquivos de governança operacional, prompts internos, logs de agentes e evidên
 
 A validação independente que originou o baseline público reproduziu **108/108 testes aprovados**, sendo **93 testes do Core** e **15 testes MCP**, com zero falhas naquele ambiente.
 
-Um piloto posterior em Windows, em 2026-09-30, reproduziu o Core e o MCP funcionalmente, mas encontrou **107/108** na suíte completa: somente `M15_CORE_REGRESSION_GUARD` falhou porque o guard calcula SHA-256 dos bytes físicos enquanto um checkout com `core.autocrlf=true` materializou arquivos LF como CRLF. O Git permaneceu com working tree limpo. A correção de portabilidade está pendente de validação técnica.
+Um piloto posterior em Windows, em 2026-09-30, reproduziu o Core e o MCP funcionalmente, mas encontrou **107/108** na suíte completa: somente `M15_CORE_REGRESSION_GUARD` falhou porque o guard calculava SHA-256 dos bytes físicos enquanto um checkout com `core.autocrlf=true` materializou arquivos LF como CRLF. O Git permaneceu com working tree limpo. Em 2026-10-01, a causa foi confirmada nos seis arquivos protegidos e o guard passou a normalizar CRLF para LF antes do hash.
 
-Até essa correção ser homologada, o número **108/108** deve ser lido como baseline independente de referência, e não como evidência de portabilidade universal.
+A correção foi homologada localmente em dois clones limpos Windows do mesmo HEAD: um working tree CRLF (`core.autocrlf=true`) e outro LF (`core.autocrlf=false`), ambos com **108/108 PASS**. Uma troca puramente CRLF↔LF não dispara o M15, enquanto uma mutação material controlada continua sendo rejeitada. Esta rodada não executou Linux/macOS.
 
 A suíte cobre, entre outros pontos:
 
@@ -231,7 +231,7 @@ A suíte cobre, entre outros pontos:
 - O projeto é um protótipo educacional; não é produto comercial ou solução pronta para produção.
 - Não comprova eficácia educacional, product-market fit ou conformidade regulatória.
 - O MCP foi validado como servidor local `stdio`; integrações com hosts específicos dependem da configuração de cada host.
-- O guard de hash `M15_CORE_REGRESSION_GUARD` possui finding conhecido de portabilidade em checkout Windows com conversão LF→CRLF, pendente de correção técnica.
+- O finding histórico de portabilidade do `M15_CORE_REGRESSION_GUARD` em checkout Windows LF→CRLF foi corrigido por hash canônico de texto e homologado em checkouts Windows CRLF e LF; outros sistemas operacionais permanecem fora do escopo da rodada de 2026-10-01.
 - Métricas de valor e adoção permanecem hipóteses quando não há baseline observável.
 
 ## Melhorias realizadas sobre o fluxo-base

@@ -53,7 +53,7 @@ npm ci
 npm test
 ```
 
-A mudança não deve reduzir silenciosamente a cobertura existente. O baseline independente que originou a publicação possuía **108 testes** — 93 Core e 15 MCP. Um piloto Windows posterior identificou uma dependência de line endings no guard de hash `M15_CORE_REGRESSION_GUARD`; por isso, contagens ou resultados de um único ambiente não devem ser promovidos como portabilidade universal sem evidência.
+A mudança não deve reduzir silenciosamente a cobertura existente. O baseline independente que originou a publicação possuía **108 testes** — 93 Core e 15 MCP. O finding Windows de line endings no `M15_CORE_REGRESSION_GUARD` foi corrigido por normalização canônica CRLF→LF e homologado em checkouts Windows CRLF e LF; ainda assim, resultados de um único sistema operacional não devem ser promovidos como portabilidade universal sem evidência adicional.
 
 Se a contagem futura mudar legitimamente, documente o novo estado em vez de tratar 108 como número permanente.
 
