@@ -53,21 +53,44 @@ npm ci
 npm test
 ```
 
-A mudança não deve reduzir silenciosamente a cobertura existente. No estado publicado que originou este documento, a suíte validada possuía **108 testes** — 93 Core e 15 MCP.
+A mudança não deve reduzir silenciosamente a cobertura existente. O baseline independente que originou a publicação possuía **108 testes** — 93 Core e 15 MCP. Um piloto Windows posterior identificou uma dependência de line endings no guard de hash `M15_CORE_REGRESSION_GUARD`; por isso, contagens ou resultados de um único ambiente não devem ser promovidos como portabilidade universal sem evidência.
 
 Se a contagem futura mudar legitimamente, documente o novo estado em vez de tratar 108 como número permanente.
+
+## Reprodutibilidade pública
+
+Para mudanças que afetem instalação, execução, testes, interfaces ou comportamento observável, a documentação pública deve continuar permitindo que um terceiro parta de um clone limpo e chegue ao comportamento anunciado sem depender de conhecimento tácito do autor.
+
+No mínimo, mantenha atualizado:
+
+- pré-requisitos e versões materiais;
+- comando de clone e diretório de trabalho quando aplicável;
+- instalação determinística das dependências;
+- comando de validação/testes;
+- caminho curto até a primeira execução útil;
+- saídas ou critérios de aceite esperados;
+- limitações conhecidas e diferenças relevantes entre ambientes;
+- troubleshooting para falhas reproduzíveis que possam confundir um avaliador;
+- verificação final de estado limpo quando aplicável.
+
+O README deve permanecer legível. Quando o procedimento completo for extenso, mantenha um Quickstart no README e um guia detalhado em `docs/`, como [`docs/PILOT_GUIDE.md`](docs/PILOT_GUIDE.md).
+
+Se um resultado variar entre Windows, Linux, macOS ou configurações Git relevantes, registre a diferença com evidência. Não altere hashes, testes ou expectativas apenas para fazer um ambiente local ficar verde sem compreender a causa.
 
 ## Checklist para Pull Request
 
 - [ ] O escopo da mudança está claro.
 - [ ] O comportamento alterado foi testado.
 - [ ] O estado declarado corresponde à evidência disponível.
+- [ ] Quickstart/guia reproduzível foi atualizado quando a mudança afeta instalação, execução, testes ou interfaces.
+- [ ] Saídas esperadas e limitações ambientais relevantes estão documentadas.
+- [ ] Ambientes materiais foram testados ou a limitação de portabilidade está explicitamente declarada.
 - [ ] Não incluí segredos, credenciais ou dados reais.
 - [ ] Dados de exemplo permanecem sintéticos.
 - [ ] Não incluí prompts, logs, paths ou governança operacional interna.
 - [ ] Referências e componentes de terceiros estão corretamente atribuídos.
 - [ ] Roadmap continua separado de funcionalidades implementadas.
-- [ ] Li `SECURITY.md`, `LICENSE` e `NOTICE.md`.
+- [ ] Li `SECURITY.md`, `LICENSE`, `NOTICE.md` e o guia de piloto quando a mudança afeta uso reproduzível.
 
 ## Segurança
 
